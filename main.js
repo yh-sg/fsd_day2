@@ -1,6 +1,6 @@
 //load libaries
 const express = require('express')
-const hbs = require('express-handlebars')
+const handlebars = require('express-handlebars')
 
 const PORT = parseInt(process.argv[2]) || parseInt(process.env.APP_PORT) || 3000;
 
@@ -8,33 +8,27 @@ const PORT = parseInt(process.argv[2]) || parseInt(process.env.APP_PORT) || 3000
 const app = express(); //express returns a function, depend on the libaray
 
 //configure handlebards
-app.engine('hbs',hbs({defaultLayout: 'default.hbs'}))
+app.engine('hbs',handlebars({defaultLayout: 'default.hbs'}))
 app.set('view engine', 'hbs')
 app.set('views', __dirname + '/views')
 
-/***********Statics way************/
-// app.use(express.static(__dirname + '/static'))
+/***********Dynamic************/
+app.use(express.static(__dirname + '/dice_images')) //load the image files, next time use public in order to access css/images/etc.
 
-// app.get('/roll',(req,res)=>{
-//     res.status(200)
-//     res.type('text/html')
-//     res.sendFile(__dirname + '/static/roll.html')
-// })
+const imageArray = ['dado-1','roll2','three_dots','four','Five-Image','dice-showing-6'] 
+let randomImage = imageArray[Math.floor(Math.random()*6)];
+let randomImage2 = imageArray[Math.floor(Math.random()*6)];
 
-// app.use((req,res)=>{
-//     res.status(200)
-//     res.type('text/html')
-//     res.sendFile(__dirname + '/static/dice.html')
-// })
-
-/*********************************/
-//
-/***********Dynamic way************/
+app.get('/roll',(req,res)=>{
+    res.status(200)
+    res.type('text/html')
+    res.render('roll',{ranImage: randomImage, ranImage2: randomImage2})
+})
 
 app.use((req,res)=>{
     res.status(200)
     res.type('text/html')
-    res.render('dice',{})
+    res.render('dice')
 })
 
 /*********************************/
